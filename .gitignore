@@ -1,8 +1,4 @@
 venv
 database/
-<<<<<<< HEAD
-__pycache__.env
-=======
 __pycache__
 .env
->>>>>>> 914e0d54a5fe221682453a03a6d031f572626ecc
