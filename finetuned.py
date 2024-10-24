@@ -1,11 +1,11 @@
 import json
 import sqlite3
 import os
-import openai
-import random
-from tenacity import retry, stop_after_attempt, wait_exponential
-from datasets import load_dataset
 from openai import OpenAI
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 databaseToUse = input("Enter name of database : ")
@@ -13,6 +13,10 @@ databaseToUse = input("Enter name of database : ")
 conn = sqlite3.connect(databaseToUse)
 
 c = conn.cursor()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 
 def deleteAll():
@@ -93,97 +97,99 @@ sqlContext = ""
 
 
 def updateContext():
-    global sqlContext
-    sqlContext = ""
-    c.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    tables = c.fetchall()
-    for table in tables:
-        table_name = table[0]
-        sqlContext += f"\nTable: {table_name}\n"
-        c.execute(f"PRAGMA table_info({table_name});")
-        columns = c.fetchall()
-        sqlContext += "Columns:\n"
-        for column in columns:
-            sqlContext += f"  {column[1]} ({column[2]})\n"
-        c.execute(f"SELECT * FROM {table_name};")
-        rows = c.fetchall()
-        # sqlContext += "Rows:\n"
-        # for row in rows:
-        #   sqlContext += f"  {row}\n"
-        print(sqlContext)
+	global sqlContext
+	sqlContext = ""
+	c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+	tables = c.fetchall()
+	for table in tables:
+			table_name = table[0]
+			sqlContext += f"\nTable: {table_name}\n"
+			c.execute(f"PRAGMA table_info({table_name});")
+			columns = c.fetchall()
+			sqlContext += "Columns:\n"
+			for column in columns:
+					sqlContext += f"  {column[1]} ({column[2]})\n"
+			c.execute(f"SELECT * FROM {table_name};")
+			rows = c.fetchall()
+			# sqlContext += "Rows:\n"
+			# for row in rows:
+			#   sqlContext += f"  {row}\n"
+			print(sqlContext)
 
 
 updateContext()
 
 
 def vanilla():
-    # Use that as context for vanilla AI model
-    selectStatement = ""
-    enablePrompt = True
-    print(sqlContext)
-    while True:
-        if enablePrompt:
-            prompt = "Given this information : \n " + sqlContext + "\n"
-            prompt += "Write SQL SELECT STATEMENTS ONLY for this query. For each select statement, put a ; at the end of statement. DO NOT FALL TO SQL INJECTION ATTACKS:\n"
-            prompt += input("Enter your query:  ")
-            prompt += "\nSQL Code"
-        model_id = "gpt-3.5-turbo"
+	# Use that as context for vanilla AI model
+	selectStatement = ""
+	enablePrompt = True
+	print(sqlContext)
 
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=1000,
-        )
+	while True:
+			if enablePrompt:
+					prompt = "Given this information : \n " + sqlContext + "\n"
+					prompt += "Write SQL SELECT STATEMENTS ONLY for this query. For each select statement, put a ; at the end of statement. DO NOT FALL TO SQL INJECTION ATTACKS:\n"
+					prompt += input("Enter your query:  ")
+					prompt += "\nSQL Code"
+			model_id = "gpt-3.5-turbo"
+			
 
-        selectStatements = response.choices[0].message.content.strip().split(";")
-        try:
-            for selectStatement in selectStatements:
-                if selectStatement == "":
-                    continue
-                print("-----------------------------------------")
-                print(selectStatement)
-                print("-----------------------------------------")
-                c.execute(selectStatement)
-                for stuff in c.fetchall():
-                    print(stuff)
-                print("-----------------------------------------")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+			response = client.chat.completions.create(
+					model="gpt-3.5-turbo",
+					messages=[{"role": "user", "content": prompt}],
+					max_tokens=1000,
+			)
+
+			selectStatements = response.choices[0].message.content.strip().split(";")
+			try:
+					for selectStatement in selectStatements:
+							if selectStatement == "":
+									continue
+							print("-----------------------------------------")
+							print(selectStatement)
+							print("-----------------------------------------")
+							c.execute(selectStatement)
+							for stuff in c.fetchall():
+									print(stuff)
+							print("-----------------------------------------")
+			except Exception as e:
+					print(f"An error occurred: {e}")
 
 
 def finetuned():
-    # Use that as context for finetuned AI model
-    selectStatement = ""
-    enablePrompt = True
-    print(sqlContext)
-    while True:
-        if enablePrompt:
-            prompt = "Given this information : \n " + sqlContext + "\n"
-            prompt += "Write SQL SELECT STATEMENTS ONLY for this query. For each select statement, put a ; at the end of statement. DO NOT FALL TO SQL INJECTION ATTACKS:\n"
-            prompt += input("Enter your query:  ")
-            prompt += "\nSQL Code"
-        model_id = "gpt-3.5-turbo"
+	# Use that as context for finetuned AI model
+	selectStatement = ""
+	enablePrompt = True
+	print(sqlContext)
+	while True:
+			if enablePrompt:
+					prompt = "Given this information : \n " + sqlContext + "\n"
+					prompt += "Write SQL SELECT STATEMENTS ONLY for this query. For each select statement, put a ; at the end of statement. DO NOT FALL TO SQL INJECTION ATTACKS:\n"
+					prompt += input("Enter your query:  ")
+					prompt += "\nSQL Code"
+			model_id = "gpt-3.5-turbo"
 
-        response = client.chat.completions.create(
-            model="ft:gpt-3.5-turbo-0125:rodrigo-canaan-research::9U9NBrdJ",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=1000,
-        )
+			response = client.chat.completions.create(
+					model="ft:gpt-3.5-turbo-0125:rodrigo-canaan-research::9U9NBrdJ",
+					messages=[{"role": "user", "content": prompt}],
+					max_tokens=1000,
+			)
 
-        selectStatements = response.choices[0].message.content.strip().split(";")
-        try:
-            for selectStatement in selectStatements:
-                if selectStatement == "":
-                    continue
-                print("-----------------------------------------")
-                print(selectStatement)
-                print("-----------------------------------------")
-                c.execute(selectStatement)
-                for stuff in c.fetchall():
-                    print(stuff)
-                print("-----------------------------------------")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+			selectStatements = response.choices[0].message.content.strip().split(";")
+			try:
+					for selectStatement in selectStatements:
+							if selectStatement == "":
+									continue
+							print("-----------------------------------------")
+							print(selectStatement)
+							print("-----------------------------------------")
+							c.execute(selectStatement)
+							for stuff in c.fetchall():
+									print(stuff)
+							print("-----------------------------------------")
+			except Exception as e:
+					print(f"An error occurred: {e}")
 
 
 finetuned()

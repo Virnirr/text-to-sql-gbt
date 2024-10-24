@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "test-suite-sql-eval"
+version = "0.1.0"
+description = ""
+authors = ["Zhi He <zhihe122@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+openai = "^1.52.2"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
