@@ -10,7 +10,7 @@ load_dotenv()
 
 
 class TextToSQLModel:
-	def __init__(self, database=sqlite3.connect(":memory:")):
+	def __init__(self, database):
 		self.c = database.cursor()
 		self.sqlContext = ""
 		self.deleteAll()
@@ -44,8 +44,6 @@ class TextToSQLModel:
 			);
 			"""
 		)
-
-
 
 		c.execute(
 			"""INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
