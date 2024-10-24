@@ -6,7 +6,7 @@ authors = ["Zhi He <zhihe122@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.10"
 openai = "^1.52.2"
 python-dotenv = "^1.0.1"
 
