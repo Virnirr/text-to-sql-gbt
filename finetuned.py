@@ -15,9 +15,6 @@ conn = sqlite3.connect(databaseToUse)
 c = conn.cursor()
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
 def deleteAll():
 	# Fetch all table names from the database
 	c.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -27,9 +24,7 @@ def deleteAll():
 	for table in tables:
     	drop_table_sql = f"DROP TABLE IF EXISTS {table[0]}"
     	c.execute(drop_table_sql)
-=======
-=======
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+
 def deleteAll():
     # Fetch all table names from the database
     c.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -39,29 +34,14 @@ def deleteAll():
     for table in tables:
         drop_table_sql = f"DROP TABLE IF EXISTS {table[0]}"
         c.execute(drop_table_sql)
-<<<<<<< HEAD
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
-=======
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+
 
 
 deleteAll()
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-def defaultData():
-	c.execute('''CREATE TABLE Person (
-=======
-=======
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 def defaultData():
-    c.execute(
-        """CREATE TABLE Person (
-<<<<<<< HEAD
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
-=======
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+	c.execute('''CREATE TABLE Person (
     	PersonID INT PRIMARY KEY,       	-- Unique identifier for each person
     	FirstName VARCHAR(50),          	-- Person's first name
     	LastName VARCHAR(50),           	-- Person's last name
@@ -71,8 +51,6 @@ def defaultData():
     	Address VARCHAR(150),           	-- Physical address
     	DateOfBirth DATE                	-- Date of birth
 	);
-<<<<<<< HEAD
-<<<<<<< HEAD
 	''')
 
 	c.execute('''INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
@@ -95,57 +73,6 @@ def defaultData():
 	VALUES (9, 'Lucas', 'Martin', 38, 'lucas.martin@example.com', '222-333-4444', '963 Redwood St', '1986-03-04');''')
 	c.execute('''INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
 	VALUES (10, 'Sophia', 'Garcia', 27, 'sophia.garcia@example.com', '888-555-4444', '852 Poplar St', '1996-10-25');''')
-=======
-=======
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
-	"""
-    )
-
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (1, 'John', 'Doe', 25, 'john.doe@example.com', '123-456-7890', '123 Main St', '1998-04-12');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (2, 'Jane', 'Smith', 30, 'jane.smith@example.com', '987-654-3210', '456 Oak St', '1993-07-22');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (3, 'Michael', 'Johnson', 40, 'michael.j@example.com', '555-123-4567', '789 Pine St', '1983-01-15');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (4, 'Emily', 'Davis', 22, 'emily.davis@example.com', '444-987-6543', '321 Elm St', '2002-05-10');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (5, 'Chris', 'Brown', 35, 'chris.brown@example.com', '666-789-0123', '654 Cedar St', '1989-09-23');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (6, 'Anna', 'Wilson', 28, 'anna.wilson@example.com', '333-444-5555', '987 Maple St', '1995-11-30');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (7, 'David', 'Taylor', 50, 'david.taylor@example.com', '111-222-3333', '654 Birch St', '1974-06-07');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (8, 'Olivia', 'Moore', 45, 'olivia.moore@example.com', '777-888-9999', '321 Spruce St', '1978-12-19');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (9, 'Lucas', 'Martin', 38, 'lucas.martin@example.com', '222-333-4444', '963 Redwood St', '1986-03-04');"""
-    )
-    c.execute(
-        """INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
-	VALUES (10, 'Sophia', 'Garcia', 27, 'sophia.garcia@example.com', '888-555-4444', '852 Poplar St', '1996-10-25');"""
-    )
-
-<<<<<<< HEAD
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
-=======
->>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 defaultData()
 
