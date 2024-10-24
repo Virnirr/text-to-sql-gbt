@@ -15,6 +15,7 @@ class TextToSQLModel:
         self.sqlContext = ""
         self.deleteAll()
         self.defaultData()
+        self.updateContext()
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     def deleteAll(self):
@@ -99,13 +100,13 @@ class TextToSQLModel:
             columns = c.fetchall()
             self.sqlContext += "Columns:\n"
             for column in columns:
-                sqlContext += f"  {column[1]} ({column[2]})\n"
+                self.sqlContext += f"  {column[1]} ({column[2]})\n"
             c.execute(f"SELECT * FROM {table_name};")
             rows = c.fetchall()
             # sqlContext += "Rows:\n"
             # for row in rows:
             #   sqlContext += f"  {row}\n"
-            print(sqlContext)
+            print(self.sqlContext)
 
 
     def vanilla(self):
