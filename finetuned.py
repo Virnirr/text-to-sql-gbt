@@ -16,6 +16,7 @@ c = conn.cursor()
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def deleteAll():
 	# Fetch all table names from the database
@@ -27,6 +28,8 @@ def deleteAll():
     	drop_table_sql = f"DROP TABLE IF EXISTS {table[0]}"
     	c.execute(drop_table_sql)
 =======
+=======
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 def deleteAll():
     # Fetch all table names from the database
     c.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -36,19 +39,28 @@ def deleteAll():
     for table in tables:
         drop_table_sql = f"DROP TABLE IF EXISTS {table[0]}"
         c.execute(drop_table_sql)
+<<<<<<< HEAD
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+=======
 >>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 
 deleteAll()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 def defaultData():
 	c.execute('''CREATE TABLE Person (
 =======
+=======
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 def defaultData():
     c.execute(
         """CREATE TABLE Person (
+<<<<<<< HEAD
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+=======
 >>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
     	PersonID INT PRIMARY KEY,       	-- Unique identifier for each person
     	FirstName VARCHAR(50),          	-- Person's first name
@@ -59,6 +71,7 @@ def defaultData():
     	Address VARCHAR(150),           	-- Physical address
     	DateOfBirth DATE                	-- Date of birth
 	);
+<<<<<<< HEAD
 <<<<<<< HEAD
 	''')
 
@@ -83,6 +96,8 @@ def defaultData():
 	c.execute('''INSERT INTO Person (PersonID, FirstName, LastName, Age, Email, PhoneNumber, Address, DateOfBirth)
 	VALUES (10, 'Sophia', 'Garcia', 27, 'sophia.garcia@example.com', '888-555-4444', '852 Poplar St', '1996-10-25');''')
 =======
+=======
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 	"""
     )
 
@@ -127,6 +142,9 @@ def defaultData():
 	VALUES (10, 'Sophia', 'Garcia', 27, 'sophia.garcia@example.com', '888-555-4444', '852 Poplar St', '1996-10-25');"""
     )
 
+<<<<<<< HEAD
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+=======
 >>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 defaultData()
@@ -136,6 +154,7 @@ sqlContext = ""
 
 
 def updateContext():
+<<<<<<< HEAD
 <<<<<<< HEAD
   global sqlContext
   sqlContext = ""
@@ -156,6 +175,8 @@ def updateContext():
 	#   sqlContext += f"  {row}\n"
   print(sqlContext)
 =======
+=======
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
     global sqlContext
     sqlContext = ""
     c.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -175,12 +196,16 @@ def updateContext():
         #   sqlContext += f"  {row}\n"
         print(sqlContext)
 
+<<<<<<< HEAD
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+=======
 >>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 updateContext()
 
 
 def vanilla():
+<<<<<<< HEAD
 <<<<<<< HEAD
 	#Use that as context for vanilla AI model
 	selectStatement = ""
@@ -249,6 +274,8 @@ def finetuned():
   	except Exception as e:
     	print(f"An error occurred: {e}")
 =======
+=======
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
     # Use that as context for vanilla AI model
     selectStatement = ""
     enablePrompt = True
@@ -316,6 +343,9 @@ def finetuned():
                 print("-----------------------------------------")
         except Exception as e:
             print(f"An error occurred: {e}")
+<<<<<<< HEAD
+>>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
+=======
 >>>>>>> 7905412b809d7016a1eabfc158aee1d6535230fd
 
 
