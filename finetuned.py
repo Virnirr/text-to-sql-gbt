@@ -152,7 +152,6 @@ class TextToSQLModel:
         c = self.c
         selectStatement = ""
         enablePrompt = True
-        print(self.sqlContext)
         while True:
             if enablePrompt:
                 prompt = "Given this information : \n " + self.sqlContext + "\n"
