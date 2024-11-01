@@ -26,9 +26,9 @@ def convert_fk_index(data):
             if ref_cid and cid:
                 fk_holder.append([cid, ref_cid])
         except:
-	    traceback.print_exc()
-            print "table_names_original: ", data['table_names_original']
-            print "finding tab name: ", tn, ref_tn
+            traceback.print_exc()
+            print ("table_names_original: ", data['table_names_original'])
+            print( "finding tab name: ", tn, ref_tn)
             sys.exit()
     return fk_holder
 
@@ -56,7 +56,7 @@ def dump_db_json_schema(db, f):
         data['table_names'].append(table_name.lower().replace("_", ' '))
         fks = conn.execute("PRAGMA foreign_key_list('{}') ".format(table_name)).fetchall()
         #print("db:{} table:{} fks:{}".format(f,table_name,fks))
-	fk_holder.extend([[(table_name, fk[3]), (fk[2], fk[4])] for fk in fks])
+        fk_holder.extend([[(table_name, fk[3]), (fk[2], fk[4])] for fk in fks])
         cur = conn.execute("PRAGMA table_info('{}') ".format(table_name))
         for j, col in enumerate(cur.fetchall()):
             data['column_names_original'].append((i, col[1]))
@@ -83,10 +83,38 @@ def dump_db_json_schema(db, f):
 
     return data
 
+def get_schema(db):
+    """
+    Get database's schema, which is a dict with table name as key
+    and list of column names as value
+    :param db: database path
+    :return: schema dict
+    """
+
+    schema = ""
+    conn = sqlite3.connect(db)
+    cursor = conn.cursor()
+
+    # fetch table names
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = [str(table[0].lower()) for table in cursor.fetchall()]
+    # fetch table info
+    for table in tables:
+        sqlContext = ""
+        cursor.execute("PRAGMA table_info({})".format(table))
+        sqlContext += f"\nTable: {table}\n"
+        sqlContext += "Columns:\n"
+        columns = cursor.fetchall()
+        for column in columns:
+            sqlContext += f"  {column[1]} ({column[2]})\n"
+        
+        schema += "\n" + sqlContext
+
+    return schema
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print "Usage: python get_tables.py [dir includes many subdirs containing database.sqlite files] [output file name e.g. output.json] [existing tables.json file to be inherited]"
+        print ("Usage: python get_tables.py [dir includes many subdirs containing database.sqlite files] [output file name e.g. output.json] [existing tables.json file to be inherited]")
         sys.exit()
     input_dir = sys.argv[1]
     output_file = sys.argv[2]
@@ -98,10 +126,10 @@ if __name__ == '__main__':
         #for tab in ex_tabs:
         #    tab["foreign_keys"] = convert_fk_index(tab)
         ex_tabs = {tab["db_id"]: tab for tab in ex_tabs if tab["db_id"] in all_fs}
-        print "precessed file num: ", len(ex_tabs)
+        print( "precessed file num: ", len(ex_tabs))
     not_fs = [df for df in listdir(input_dir) if not exists(join(input_dir, df, df+'.sqlite'))]
     for d in not_fs:
-        print "no sqlite file found in: ", d
+        print ("no sqlite file found in: ", d)
     db_files = [(df+'.sqlite', df) for df in listdir(input_dir) if exists(join(input_dir, df, df+'.sqlite'))]
     tables = []
     for f, df in db_files:
@@ -109,18 +137,20 @@ if __name__ == '__main__':
             #print 'reading old db: ', df
         #    tables.append(ex_tabs[df])
         db = join(input_dir, df, f)
-        print '\nreading new db: ', df
-        table = dump_db_json_schema(db, df)
-        prev_tab_num = len(ex_tabs[df]["table_names"])
-        prev_col_num = len(ex_tabs[df]["column_names"])
-        cur_tab_num = len(table["table_names"])
-        cur_col_num = len(table["column_names"])
-        if df in ex_tabs.keys() and prev_tab_num == cur_tab_num and prev_col_num == cur_col_num and prev_tab_num != 0 and len(ex_tabs[df]["column_names"]) > 1:
-            table["table_names"] = ex_tabs[df]["table_names"]
-            table["column_names"] = ex_tabs[df]["column_names"]
-        else:
-            print "\n----------------------------------problem db: ", df
+        print ('\nreading new db: ', df)
+        table = get_schema(db)
+        # prev_tab_num = len(ex_tabs[df]["table_names"])
+        # prev_col_num = len(ex_tabs[df]["column_names"])
+        # cur_tab_num = len(table["table_names"])
+        # cur_col_num = len(table["column_names"])
+        # if df in ex_tabs.keys() and prev_tab_num == cur_tab_num and prev_col_num == cur_col_num and prev_tab_num != 0 and len(ex_tabs[df]["column_names"]) > 1:
+        #     table["table_names"] = ex_tabs[df]["table_names"]
+        #     table["column_names"] = ex_tabs[df]["column_names"]
+        # else:
+        #     print ("\n----------------------------------problem db: ", df)
         tables.append(table)
-    print "final db num: ", len(tables)
+    print ("final db num: ", len(tables))
     with open(output_file, 'wt') as out:
-        json.dump(tables, out, sort_keys=True, indent=2, separators=(',', ': '))
+        for table in tables:
+            out.write(table)
+        # json.dump(tables, out, sort_keys=True, indent=2, separators=(',', ': '))

@@ -6,11 +6,12 @@ import argparse
 from process_sql import get_sql
 
 
+
 #TODO: update the following dirs
-sql_path = 'spider/train.json'
+sql_path = 'newText.txt'
 db_dir = 'database/'
 output_file = 'dev_new.json'
-table_file = 'spider/tables.json'
+table_file = 'tables.json'
 
 
 class Schema:
