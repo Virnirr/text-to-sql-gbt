@@ -101,8 +101,6 @@ class TextToSQLModel:
             self.sqlContext += "Columns:\n"
             for column in columns:
                 self.sqlContext += f"  {column[1]} ({column[2]})\n"
-            c.execute(f"SELECT * FROM {table_name};")
-            rows = c.fetchall()
             # sqlContext += "Rows:\n"
             # for row in rows:
             #   sqlContext += f"  {row}\n"
