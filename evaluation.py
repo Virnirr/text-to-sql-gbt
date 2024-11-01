@@ -432,6 +432,7 @@ class Evaluator:
 
 
 def isValidSQL(sql, db):
+    print("DB : " + str(db))
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
     try:

@@ -42,6 +42,26 @@ def quick_rej(result1: List[Tuple], result2: List[Tuple], order_matters: bool) -
         return set(s1) == set(s2)
 
 
+def updateContext(self, connection):
+            
+    c = connection
+    sqlContext = ""
+            
+    c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = c.fetchall()
+    for table in tables:
+        table_name = table[0]
+        sqlContext += f"\nTable: {table_name}\n"
+        c.execute(f"PRAGMA table_info({table_name});")
+        columns = c.fetchall()
+        sqlContext += "Columns:\n"
+        for column in columns:
+            sqlContext += f"  {column[1]} ({column[2]})\n"
+                # sqlContext += "Rows:\n"
+                # for row in rows:
+                #   sqlContext += f"  {row}\n"
+    print(sqlContext)
+
 # return whether two bag of relations are equivalent
 def multiset_eq(l1: List, l2: List) -> bool:
     if len(l1) != len(l2):
@@ -134,6 +154,8 @@ def get_cursor_from_path(sqlite_path: str):
         if not os.path.exists(sqlite_path):
             print("Openning a new connection %s" % sqlite_path)
         connection = sqlite3.connect(sqlite_path)
+        updateContext(connection)
+
     except Exception as e:
         print(sqlite_path)
         raise e
