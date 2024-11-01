@@ -154,7 +154,19 @@ def get_cursor_from_path(sqlite_path: str):
         if not os.path.exists(sqlite_path):
             print("Openning a new connection %s" % sqlite_path)
         connection = sqlite3.connect(sqlite_path)
-        updateContext(connection)
+        print(sqlite_path)
+       #updateContext(connection)
+        connection.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = connection.fetchall()
+        # sqlContext = ""
+        # for table in tables:
+        #     table_name = table[0]
+        #     sqlContext += f"\nTable: {table_name}\n"
+        # connection.execute(f"PRAGMA table_info({table_name});")
+        # columns = connection.fetchall()
+        # sqlContext += "Columns:\n"
+        # for column in columns:
+        #     sqlContext += f"  {column[1]} ({column[2]})\n"
 
     except Exception as e:
         print(sqlite_path)
