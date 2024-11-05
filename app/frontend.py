@@ -1,6 +1,5 @@
 import streamlit as st
-import movr_ai_buddy_backendv2 as backend
-
+import backend
 
 st.set_page_config(page_title="Chatbot", page_icon="🤖", layout="wide")
 st.title("Text to SQL GPT")
