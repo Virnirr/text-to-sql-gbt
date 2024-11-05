@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-modelId = 'ft:gpt-3.5-turbo-0125:rodrigo-canaan-research::9U9NBrdJ' # change this to use a different version from the model provider
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def retrieve(query):
