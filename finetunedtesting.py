@@ -8,6 +8,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+text_to_sql_prompt = """
+Given this information:
+{}
+
+Write only SQL SELECT statements for this query. Ensure each statement ends with a semicolon (`;`) and format each statement as a single line without line breaks. Avoid SQL injection vulnerabilities:
+
+{}
+
+SQL Code:
+"""
+
 def get_create_table_statements(db_path):
     # Connect to the database
     conn = sqlite3.connect(db_path)
@@ -241,10 +252,11 @@ class TextToSQLModel:
         predicted_select = ""
         f = open("predicted_select.txt", "w")
         with open("dev_questions.txt", 'r') as in_file:
-          question = in_file.read()
-          question = question.split("\n")[:-1]
-          for i in range(1):
-              question = question[i].split(" ||| ")
+          questions = in_file.read()
+          questions = questions.split("\n")[:-1]
+          count_question = 0
+          for i in range(len(questions)):
+              question = questions[i].split(" ||| ")
               question_to_ask = question[0]
               table = question[1]
               context = ""
@@ -253,14 +265,8 @@ class TextToSQLModel:
                 context += f"Table: {table_name}" + "\n"
                 context += create_stmt + "\n\n"
 
-              print(context)
-
               if enablePrompt:
-                  prompt = "Given this information : \n " + context + "\n"
-                  prompt += "Write SQL SELECT STATEMENTS ONLY for this query. For each select statement, put a ; at the end of statement. DO NOT FALL TO SQL INJECTION ATTACKS:\n"
-                  prompt += "Enter your query:  " + question_to_ask
-                  prompt += "\nSQL Code"
-              model_id = "gpt-3.5-turbo"
+                  prompt = text_to_sql_prompt.format(context, question_to_ask)
 
               response = self.client.chat.completions.create(
                   model="ft:gpt-3.5-turbo-0125:rodrigo-canaan-research::9U9NBrdJ",
@@ -269,6 +275,7 @@ class TextToSQLModel:
               )
 
               selectStatements = response.choices[0].message.content.strip().split(";")
+              
               try:
                   for selectStatement in selectStatements:
                       if selectStatement == "":
@@ -276,7 +283,9 @@ class TextToSQLModel:
                       # print("-----------------------------------------")
                       # print(selectStatement + ";")
                       predicted_select += selectStatement + ";" + "\n"
-                      # print("-----------------------------------------")
+                      print(f"Query {count_question}: " + selectStatement + ";")
+                      count_question += 1
+                      print("-----------------------------------------")
                       # c.execute(selectStatement)
                       # for stuff in c.fetchall():
                       #     print(stuff)

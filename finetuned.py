@@ -2,6 +2,7 @@ import json
 import sqlite3
 import os
 from openai import OpenAI
+import argparse
 
 from dotenv import load_dotenv
 
