@@ -10,7 +10,7 @@ if 'chat_history' not in st.session_state: #see if the chat history hasn't been 
 
 chat_container = st.container()
 
-input_text = st.chat_input("What can I help you with today?") #display a chat input box
+input_text = st.chat_input("What table do you want to view?") #display a chat input box
 
 if input_text:
     backend.chat_with_model(message_history=st.session_state.chat_history, query=input_text)
@@ -20,3 +20,4 @@ if input_text:
 for message in st.session_state.chat_history: #loop through the chat history
     with chat_container.chat_message(message.role): #renders a chat line for the given role, containing everything in the with block
         st.markdown(message.text) #display the chat content
+    
