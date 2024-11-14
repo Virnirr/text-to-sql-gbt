@@ -8,6 +8,7 @@ load_dotenv()
 
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
 def get_create_table_statements(db_path):
     # Connect to the database
     conn = sqlite3.connect(db_path)
@@ -128,6 +129,7 @@ class ChatMessage(): #create a class that can store image and text messages
         self.text = text
 
 cached_context = ""
+db_route = ""
 
 def chat_with_model(message_history, query=None):
     global cached_context
@@ -144,6 +146,9 @@ def chat_with_model(message_history, query=None):
             cached_context = get_create_table_statements(f"database/{query}/{query}.sqlite")
         except:
             cached_context = get_create_table_statements(f"database/academic/academic.sqlite")
+            
+        global db_route
+        db_route = f"database/{query}/{query}.sqlite"
         
         response_chat_message = ChatMessage("assistant", "```" + f"Context of {query} is: \n: " + cached_context + "```" )
         message_history.append(response_chat_message)
@@ -151,6 +156,9 @@ def chat_with_model(message_history, query=None):
         return cached_context
 
     else:
+
+        conn = sqlite3.connect(db_route)
+        cursor = conn.cursor()
         context = cached_context
         # context = get_contexts(retrievalResults)
         prompt = build_prompt(query, context)
@@ -165,10 +173,19 @@ def chat_with_model(message_history, query=None):
                 continue
             # print("-----------------------------------------")
             # print(selectStatement + ";")
-            predicted_select += selectStatement + ";" + "\n"
+            predicted_select += selectStatement + ";" + "\n\n"
+
+            all_statements = predicted_select
+            all_statements += "Results: \n\n"
+            try: 
+                cursor.execute(predicted_select)
+                for stuff in cursor.fetchall():
+                    all_statements += str(stuff) + "\n"
+            except Exception as e:
+                all_statements += f"An error occurred: {e}" + "\n"
 
         # response_text = response_body.get('content')[0]['text']  
-        response_chat_message = ChatMessage('assistant', predicted_select)
+        response_chat_message = ChatMessage('assistant', all_statements)
 
         message_history.append(response_chat_message)
     

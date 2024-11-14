@@ -1,7 +1,7 @@
 Question 1:  How many singers do we have ? ||| concert_singer
 SQL:  select count(*) from singer
 
-Question 2:  What is the total number of singers ? ||| concert_singer
+Question 2:    ||| concert_singer
 SQL:  select count(*) from singer
 
 Question 3:  Show name , country , age for all singers ordered by age from the oldest to the youngest . ||| concert_singer
